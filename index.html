@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoPortarias - Central de Controle</title>
+    <title>AutoPortarias - Central de Controle GitHub</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -45,51 +45,60 @@
             opacity: 0.9;
         }
         
-        .content {
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .tab-content {
+            display: none;
             padding: 30px;
         }
         
-        .status-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+        .tab-content.active {
+            display: block;
         }
         
-        .status-card {
-            padding: 20px;
+        .test-section {
+            background: #f8f9fa;
             border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
         }
         
-        .status-card:hover {
-            transform: translateY(-5px);
+        .test-section h3 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            font-size: 1.3em;
         }
         
-        .status-card.info { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
-        .status-card.success { background: linear-gradient(135deg, #E8F5E8, #C8E6C9); }
-        .status-card.warning { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
-        .status-card.error { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
-        
-        .status-card h3 {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .status-card .value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #1976D2;
-        }
-        
-        .controls {
+        .test-buttons {
             display: flex;
             gap: 15px;
-            margin-bottom: 30px;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         
         .btn {
@@ -109,30 +118,63 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
         
-        .btn.primary {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-        }
-        
-        .btn.success {
-            background: linear-gradient(135deg, #4CAF50, #388E3C);
-            color: white;
-        }
-        
-        .btn.warning {
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            color: white;
-        }
-        
-        .btn.danger {
-            background: linear-gradient(135deg, #F44336, #D32F2F);
-            color: white;
-        }
+        .btn.primary { background: linear-gradient(135deg, #2196F3, #1976D2); color: white; }
+        .btn.success { background: linear-gradient(135deg, #4CAF50, #388E3C); color: white; }
+        .btn.warning { background: linear-gradient(135deg, #FF9800, #F57C00); color: white; }
+        .btn.danger { background: linear-gradient(135deg, #F44336, #D32F2F); color: white; }
+        .btn.info { background: linear-gradient(135deg, #00BCD4, #0097A7); color: white; }
         
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+        
+        .test-result {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .test-result.success { border-left-color: #4CAF50; background: #E8F5E8; }
+        .test-result.error { border-left-color: #F44336; background: #FFEBEE; }
+        .test-result.warning { border-left-color: #FF9800; background: #FFF3E0; }
+        
+        .status-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .status-card:hover { transform: translateY(-5px); }
+        .status-card.info { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .status-card.success { background: linear-gradient(135deg, #E8F5E8, #C8E6C9); }
+        .status-card.warning { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .status-card.error { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        
+        .status-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .status-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1976D2;
         }
         
         .portarias-list {
@@ -152,10 +194,7 @@
             transition: all 0.3s ease;
         }
         
-        .portaria-item:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        
+        .portaria-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
         .portaria-item.pendente { border-left-color: #FF9800; }
         .portaria-item.pronta { border-left-color: #2196F3; }
         .portaria-item.inserindo { border-left-color: #9C27B0; }
@@ -165,7 +204,7 @@
         
         .portaria-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
             flex-wrap: wrap;
@@ -220,7 +259,7 @@
             padding: 20px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             border: 2px solid #333;
         }
@@ -275,20 +314,242 @@
             margin-right: 10px;
             font-size: 0.9em;
         }
+        
+        .github-setup {
+            background: linear-gradient(135deg, #24292e, #586069);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .github-setup h3 {
+            color: #f6f8fa;
+            margin-bottom: 15px;
+        }
+        
+        .github-setup code {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .bookmarklet-box {
+            background: #e8f4f8;
+            border: 2px dashed #2196F3;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .bookmarklet-box h4 {
+            color: #1976D2;
+            margin-bottom: 15px;
+        }
+        
+        .bookmarklet-box .bookmarklet-link {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .bookmarklet-box .bookmarklet-link:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 AutoPortarias - Central de Controle</h1>
-            <p>Gerenciamento inteligente de lotes de portarias com sincronização TRE</p>
+            <h1>🎯 AutoPortarias - Central GitHub</h1>
+            <p>Controle via GitHub Pages + Testes File:// + Sincronização TRE</p>
         </div>
         
-        <div class="content">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('setup')">📋 Setup GitHub</div>
+            <div class="tab" onclick="switchTab('tests')">🔬 Testes File://</div>
+            <div class="tab" onclick="switchTab('controller')">🎯 Central Controle</div>
+            <div class="tab" onclick="switchTab('bookmarklets')">📎 Bookmarklets</div>
+        </div>
+        
+        <!-- TAB 1: SETUP GITHUB -->
+        <div class="tab-content active" id="setup">
+            <div class="github-setup">
+                <h3>🚀 Como Configurar GitHub Pages - Passo a Passo</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Crie um repositório:</strong>
+                    <br>• Vá para <code>github.com</code> → New Repository
+                    <br>• Nome: <code>autoportarias-controller</code>
+                    <br>• ✅ Public • ✅ Add README
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Crie o arquivo HTML:</strong>
+                    <br>• No repositório → Add file → Create new file
+                    <br>• Nome: <code>index.html</code>
+                    <br>• Cole todo o código HTML desta página
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Ative GitHub Pages:</strong>
+                    <br>• Settings → Pages (menu lateral)
+                    <br>• Source: <code>Deploy from a branch</code>
+                    <br>• Branch: <code>main</code> → Folder: <code>/ (root)</code>
+                    <br>• Save
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Acesse sua página:</strong>
+                    <br>• URL: <code>https://seuusuario.github.io/autoportarias-controller</code>
+                    <br>• Pode levar até 10 minutos para ficar online
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Prepare o arquivo JSON:</strong>
+                    <br>• Crie: <code>R:\autoportarias_state.json</code>
+                    <br>• Use o exemplo fornecido na documentação
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>📁 Arquivo JSON de Exemplo</h3>
+                <div style="background: white; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.9em; overflow-x: auto;">
+<pre>{
+  "versao": "4.0",
+  "lote_atual": {
+    "id": "teste_20250617",
+    "status": "pronto",
+    "index_atual": 0
+  },
+  "portarias": [
+    {
+      "id": "001",
+      "ordem": 1,
+      "titulo": "PORTARIA Nº 999, DE 17 DE JUNHO DE 2025",
+      "ementa": "Teste de funcionamento do sistema",
+      "conteudo": "&lt;p style='text-align:justify'&gt;Conteúdo de teste formatado&lt;/p&gt;",
+      "referencia": "DJE-AM nº 99, de 17/06/2025, p. 1",
+      "link": "https://exemplo.com",
+      "status": "pendente"
+    },
+    {
+      "id": "002", 
+      "ordem": 2,
+      "titulo": "PORTARIA Nº 1000, DE 17 DE JUNHO DE 2025",
+      "ementa": "Segunda portaria de teste",
+      "conteudo": "&lt;p style='text-align:justify'&gt;Segundo conteúdo de teste&lt;/p&gt;",
+      "referencia": "DJE-AM nº 99, de 17/06/2025, p. 2", 
+      "link": "https://exemplo.com",
+      "status": "pendente"
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB 2: TESTES FILE:// -->
+        <div class="tab-content" id="tests">
+            <h2>🔬 Testes de Acesso File:// Protocol</h2>
+            <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
+                <strong>Objetivo:</strong> Verificar se GitHub Pages pode acessar arquivos locais via file:// URLs
+            </p>
+            
+            <div class="test-section">
+                <h3>🎯 Teste A: Window.open() Direto</h3>
+                <p>Tenta abrir arquivo local diretamente com window.open()</p>
+                <div class="test-buttons">
+                    <button class="btn primary" onclick="testeWindowOpenDireto()">
+                        🚀 Teste File:// Direto
+                    </button>
+                </div>
+                <div id="resultadoTesteA" class="test-result" style="display: none;"></div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🎯 Teste B: Com Confirmação do Usuário</h3>
+                <p>Pede confirmação do usuário antes de tentar acessar</p>
+                <div class="test-buttons">
+                    <button class="btn success" onclick="testeComConfirmacao()">
+                        ✅ Teste File:// com Prompt
+                    </button>
+                </div>
+                <div id="resultadoTesteB" class="test-result" style="display: none;"></div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🎯 Teste C: Location.href (Navegação)</h3>
+                <p>Tenta navegar para arquivo local (⚠️ pode sair da página)</p>
+                <div class="test-buttons">
+                    <button class="btn warning" onclick="testeNavegacao()">
+                        ⚠️ Teste File:// Navigation
+                    </button>
+                </div>
+                <div id="resultadoTesteC" class="test-result" style="display: none;"></div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🎯 Teste D: File API (Sempre Funciona)</h3>
+                <p>Usa File API nativa do browser (seleção manual)</p>
+                <div class="test-buttons">
+                    <button class="btn info" onclick="testeFileAPI()">
+                        📁 Teste File API
+                    </button>
+                </div>
+                <div id="resultadoTesteD" class="test-result" style="display: none;"></div>
+            </div>
+            
+            <div class="test-section">
+                <h3>🎯 Teste E: Iframe Method</h3>
+                <p>Tenta carregar arquivo em iframe oculto</p>
+                <div class="test-buttons">
+                    <button class="btn info" onclick="testeIframe()">
+                        🖼️ Teste Iframe Method
+                    </button>
+                </div>
+                <div id="resultadoTesteE" class="test-result" style="display: none;"></div>
+            </div>
+            
+            <div class="instructions">
+                <h3>📊 Interpretação dos Resultados</h3>
+                <div class="step">
+                    <span class="step-number">✅</span>
+                    <strong>Se Testes A, B, C funcionarem:</strong> GitHub Pages pode acessar file:// → File-Based State viável!
+                </div>
+                <div class="step">
+                    <span class="step-number">❌</span>
+                    <strong>Se Testes A, B, C falharem:</strong> Acesso file:// bloqueado → Usar Clipboard Rotating
+                </div>
+                <div class="step">
+                    <span class="step-number">📁</span>
+                    <strong>Teste D sempre funciona:</strong> File API requer seleção manual do usuário
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB 3: CENTRAL DE CONTROLE -->
+        <div class="tab-content" id="controller">
+            <h2>🎯 Central de Controle de Portarias</h2>
+            
             <!-- Status Dashboard -->
             <div class="status-panel">
                 <div class="status-card info">
-                    <h3>📁 Arquivo Estado</h3>
+                    <h3>📁 File Access</h3>
                     <div class="value" id="fileStatus">❓</div>
                 </div>
                 <div class="status-card success">
@@ -306,7 +567,7 @@
             </div>
             
             <!-- Controles Principais -->
-            <div class="controls">
+            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
                 <button class="btn primary" onclick="lerArquivoEstado()">
                     📁 Ler R:\autoportarias_state.json
                 </button>
@@ -337,7 +598,7 @@
                 <div class="logs" id="logs">
                     <div class="log-entry log-info">
                         <span class="log-timestamp">[00:00:00]</span>
-                        Sistema AutoPortarias v4.0 inicializado - Central de Controle GitHub Pages
+                        Sistema AutoPortarias v4.0 GitHub Pages inicializado
                     </div>
                     <div class="log-entry log-info">
                         <span class="log-timestamp">[00:00:01]</span>
@@ -345,34 +606,49 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- TAB 4: BOOKMARKLETS -->
+        <div class="tab-content" id="bookmarklets">
+            <h2>📎 Bookmarklets para TRE</h2>
             
-            <!-- Instruções -->
+            <div class="bookmarklet-box">
+                <h4>🎯 Bookmarklet TRE - Leitor GitHub</h4>
+                <p>Arraste este link para sua barra de favoritos:</p>
+                <a href="javascript:(function(){async function processarDadosGitHub(){try{const clipboardText=await navigator.clipboard.readText();if(!clipboardText){alert('❌ Clipboard vazio');return;}let dados;try{dados=JSON.parse(clipboardText);}catch(e){alert('❌ Dados inválidos no clipboard');return;}if(dados.tipo==='portaria_individual'&&dados.dados){const d=dados.dados;const editores={};Object.keys(tinymce.editors).forEach(key=>{const ed=tinymce.editors[key];const con=ed.getContainer();let par=con;for(let i=0;i<10;i++){par=par.parentNode;if(par&&par.textContent){const txt=par.textContent.toLowerCase();if(txt.includes('ementa')&&!txt.includes('não exibir')){editores.EMENTA=key;break;}if(txt.includes('conteúdo')||txt.includes('conteudo')){editores.CONTEUDO=key;break;}if(txt.includes('referência')||txt.includes('referencia')){editores.REFERENCIA=key;break;}}}});if(d.titulo){const tf=document.getElementById('form-widgets-title');if(tf){tf.value=d.titulo;tf.dispatchEvent(new Event('change',{bubbles:true}));}}if(editores.EMENTA&&d.ementa){const ej=`<p style='text-align: justify;'>${d.ementa}</p>`;tinymce.get(editores.EMENTA).setContent(ej);}if(editores.CONTEUDO&&d.conteudo){tinymce.get(editores.CONTEUDO).setContent(d.conteudo);}if(editores.REFERENCIA&&d.referencia){tinymce.get(editores.REFERENCIA).setContent(d.referencia);}const ce=document.getElementById('form-widgets-display_ementa-0');if(ce){ce.checked=true;ce.dispatchEvent(new Event('change',{bubbles:true}));}const notification=document.createElement('div');notification.style.cssText='position:fixed;top:20px;right:20px;background:#4CAF50;color:white;padding:15px 20px;border-radius:8px;z-index:999999;font-family:system-ui;max-width:350px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';notification.innerHTML=`<h4 style='margin:0 0 8px 0;font-size:14px;'>✅ Portaria ${d.ordem}/${d.total}</h4><p style='margin:0;font-size:12px;'>${d.titulo}</p>`;document.body.appendChild(notification);setTimeout(()=>{if(document.body.contains(notification))document.body.removeChild(notification);},7000);}else{alert('❌ Formato de dados não reconhecido');}}catch(error){alert('❌ Erro: '+error.message);}}if(confirm('🎯 AutoPortarias TRE\n\nProcessar dados do GitHub Pages?')){processarDadosGitHub();}})();" class="bookmarklet-link">
+                    🎯 AutoPortarias TRE
+                </a>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    <strong>Como usar:</strong> Após preparar uma portaria no GitHub Pages, vá para o TRE e clique neste bookmarklet
+                </p>
+            </div>
+            
             <div class="instructions">
-                <h3>📋 Como Usar a Central de Controle</h3>
+                <h3>🔄 Fluxo de Trabalho Completo</h3>
                 
                 <div class="step">
                     <span class="step-number">1</span>
-                    <strong>Carregue o estado:</strong> Clique em "Ler R:\autoportarias_state.json" para carregar as portarias processadas pela IA
+                    <strong>GitHub Pages:</strong> Carregue o arquivo R:\autoportarias_state.json e clique "Processar Próxima"
                 </div>
                 
                 <div class="step">
                     <span class="step-number">2</span>
-                    <strong>Processe uma por vez:</strong> Clique em "Processar Próxima" para colocar os dados da próxima portaria no clipboard
+                    <strong>Nova aba TRE:</strong> Abra https://tambaqui.tre-am.jus.br/.../++add++Ato
                 </div>
                 
                 <div class="step">
                     <span class="step-number">3</span>
-                    <strong>Vá para o TRE:</strong> Abra uma nova aba em <code>https://tambaqui.tre-am.jus.br/.../++add++Ato</code>
+                    <strong>Execute bookmarklet:</strong> Clique no bookmarklet "AutoPortarias TRE" para inserir os dados
                 </div>
                 
                 <div class="step">
                     <span class="step-number">4</span>
-                    <strong>Execute o bookmarklet:</strong> No TRE, clique no bookmarklet para inserir automaticamente os dados da portaria
+                    <strong>Salve no TRE:</strong> Revise e salve a portaria no sistema TRE
                 </div>
                 
                 <div class="step">
                     <span class="step-number">5</span>
-                    <strong>Salve e repita:</strong> Salve a portaria no TRE e volte aqui para processar a próxima
+                    <strong>Volte ao GitHub:</strong> Marque como "Salva" e repita para próxima portaria
                 </div>
             </div>
         </div>
@@ -383,6 +659,17 @@
         let estadoAtual = null;
         let portariasLote = [];
         let indiceAtual = 0;
+        
+        // Função para trocar tabs
+        function switchTab(tabName) {
+            // Remove active de todas as tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adiciona active na tab clicada
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
         
         // Função para adicionar logs
         function adicionarLog(tipo, mensagem) {
@@ -395,7 +682,167 @@
             logs.scrollTop = logs.scrollHeight;
         }
         
-        // Função para atualizar contadores do dashboard
+        // Função para mostrar resultado dos testes
+        function mostrarResultadoTeste(testeId, sucesso, mensagem, detalhes = '') {
+            const resultado = document.getElementById(testeId);
+            resultado.className = `test-result ${sucesso ? 'success' : 'error'}`;
+            resultado.innerHTML = `
+                <strong>${sucesso ? '✅ SUCESSO' : '❌ FALHA'}:</strong> ${mensagem}
+                ${detalhes ? `<br><small>${detalhes}</small>` : ''}
+            `;
+            resultado.style.display = 'block';
+        }
+        
+        // TESTES FILE://
+        
+        function testeWindowOpenDireto() {
+            try {
+                const testWindow = window.open('file:///R:/Temp/TESTE.txt', '_test', 'width=600,height=400');
+                
+                setTimeout(() => {
+                    if (testWindow && !testWindow.closed) {
+                        testWindow.close();
+                        mostrarResultadoTeste('resultadoTesteA', true, 
+                            'window.open() conseguiu abrir arquivo local!',
+                            'GitHub Pages pode acessar file:// URLs');
+                    } else {
+                        mostrarResultadoTeste('resultadoTesteA', false,
+                            'window.open() foi bloqueado',
+                            'Browser/GitHub Pages não permite acesso file://');
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                mostrarResultadoTeste('resultadoTesteA', false,
+                    'Exceção capturada: ' + error.message,
+                    'Acesso file:// completamente bloqueado');
+            }
+        }
+        
+        function testeComConfirmacao() {
+            const path = prompt('Confirme o caminho do arquivo:', 'file:///R:/Temp/TESTE.txt');
+            if (path) {
+                try {
+                    const testWindow = window.open(path, '_test', 'width=600,height=400');
+                    
+                    setTimeout(() => {
+                        if (testWindow && !testWindow.closed) {
+                            testWindow.close();
+                            mostrarResultadoTeste('resultadoTesteB', true,
+                                'Confirmação do usuário permitiu acesso',
+                                'Interação manual contorna restrições');
+                        } else {
+                            mostrarResultadoTeste('resultadoTesteB', false,
+                                'Mesmo com confirmação foi bloqueado',
+                                'Restrições aplicadas independente de interação');
+                        }
+                    }, 2000);
+                    
+                } catch (error) {
+                    mostrarResultadoTeste('resultadoTesteB', false,
+                        'Erro mesmo com confirmação: ' + error.message);
+                }
+            }
+        }
+        
+        function testeNavegacao() {
+            if (confirm('⚠️ Este teste pode navegar para fora da página!\n\nContinuar?')) {
+                try {
+                    window.location.href = 'file:///R:/Temp/TESTE.txt';
+                    // Se chegou aqui, funcionou
+                    mostrarResultadoTeste('resultadoTesteC', true,
+                        'Navegação para file:// iniciada',
+                        'Se você ainda está vendo isso, pode ter funcionado parcialmente');
+                } catch (error) {
+                    mostrarResultadoTeste('resultadoTesteC', false,
+                        'Navegação bloqueada: ' + error.message);
+                }
+            }
+        }
+        
+        function testeFileAPI() {
+            try {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt,.json';
+                
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            mostrarResultadoTeste('resultadoTesteD', true,
+                                'File API funcionou perfeitamente!',
+                                `Arquivo: ${file.name} (${file.size} bytes)`);
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                
+                input.click();
+                
+                // Fallback se usuário cancelar
+                setTimeout(() => {
+                    if (!document.getElementById('resultadoTesteD').innerHTML.includes('SUCESSO')) {
+                        mostrarResultadoTeste('resultadoTesteD', false,
+                            'Usuário cancelou seleção ou erro',
+                            'File API requer seleção manual do arquivo');
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                mostrarResultadoTeste('resultadoTesteD', false,
+                    'File API não disponível: ' + error.message);
+            }
+        }
+        
+        function testeIframe() {
+            try {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = 'file:///R:/Temp/TESTE.txt';
+                
+                iframe.onload = function() {
+                    try {
+                        const content = iframe.contentDocument.body.textContent;
+                        document.body.removeChild(iframe);
+                        mostrarResultadoTeste('resultadoTesteE', true,
+                            'Iframe method funcionou!',
+                            `Conteúdo lido: ${content.substring(0, 50)}...`);
+                    } catch (error) {
+                        document.body.removeChild(iframe);
+                        mostrarResultadoTeste('resultadoTesteE', false,
+                            'Iframe carregou mas não conseguiu ler: ' + error.message);
+                    }
+                };
+                
+                iframe.onerror = function() {
+                    document.body.removeChild(iframe);
+                    mostrarResultadoTeste('resultadoTesteE', false,
+                        'Iframe não conseguiu carregar arquivo',
+                        'Same-origin policy bloqueou acesso');
+                };
+                
+                document.body.appendChild(iframe);
+                
+                // Timeout de segurança
+                setTimeout(() => {
+                    if (document.body.contains(iframe)) {
+                        document.body.removeChild(iframe);
+                        mostrarResultadoTeste('resultadoTesteE', false,
+                            'Timeout - iframe method falhou',
+                            'Arquivo não pôde ser carregado em 10 segundos');
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                mostrarResultadoTeste('resultadoTesteE', false,
+                    'Erro criando iframe: ' + error.message);
+            }
+        }
+        
+        // CENTRAL DE CONTROLE
+        
         function atualizarDashboard() {
             if (!portariasLote.length) {
                 document.getElementById('fileStatus').textContent = '❌';
@@ -414,11 +861,9 @@
             document.getElementById('pendentesCount').textContent = pendentes;
             document.getElementById('processadasCount').textContent = processadas;
             
-            // Habilita/desabilita botão
             document.getElementById('btnProxima').disabled = pendentes === 0;
         }
         
-        // Função para renderizar lista de portarias
         function renderizarPortarias() {
             const container = document.getElementById('portariasList');
             
@@ -439,7 +884,7 @@
                 
                 const statusText = {
                     'pendente': 'Aguardando',
-                    'pronta': 'Pronta para inserir',
+                    'pronta': 'Pronta para TRE',
                     'inserindo': 'Inserindo no TRE',
                     'inserida': 'Inserida no TRE',
                     'salva': 'Salva no TRE',
@@ -456,7 +901,7 @@
                     <div class="portaria-details">
                         <strong>Ordem:</strong> ${index + 1}/${portariasLote.length}<br>
                         <strong>Ementa:</strong> ${portaria.ementa ? portaria.ementa.substring(0, 100) + '...' : 'Não definida'}<br>
-                        <strong>Última atualização:</strong> ${portaria.timestamp_ultima_acao || 'Não definido'}
+                        <strong>Status:</strong> ${portaria.status}
                     </div>
                     <div class="portaria-actions">
                         <button class="btn btn-small primary" onclick="processarPortariaEspecifica(${index})" 
@@ -474,98 +919,46 @@
             });
         }
         
-        // Função principal para ler arquivo de estado
         async function lerArquivoEstado() {
             adicionarLog('info', '📁 Tentando ler R:\\autoportarias_state.json...');
             
             try {
-                // Método 1: Tentar abrir arquivo em nova janela
+                // Método 1: window.open
                 const fileWindow = window.open('file:///R:/autoportarias_state.json', '_blank', 'width=800,height=600');
                 
                 if (!fileWindow) {
-                    throw new Error('Popup bloqueado ou acesso file:// negado');
+                    throw new Error('Popup bloqueado');
                 }
                 
-                // Aguarda um pouco para a janela carregar
                 setTimeout(async () => {
                     try {
-                        // Tenta ler conteúdo da janela
-                        const content = fileWindow.document.body.textContent;
+                        const content = fileWindow.contentDocument.body.textContent;
                         fileWindow.close();
                         
                         if (content && content.trim()) {
                             const estado = JSON.parse(content);
                             processarEstadoCarregado(estado);
                         } else {
-                            throw new Error('Arquivo vazio ou ilegível');
+                            throw new Error('Arquivo vazio');
                         }
-                        
                     } catch (error) {
                         fileWindow.close();
-                        adicionarLog('warning', '⚠️ Método direto falhou, tentando método alternativo...');
+                        adicionarLog('warning', '⚠️ Método direto falhou, tentando alternativo...');
                         await lerArquivoAlternativo();
                     }
-                }, 2000);
+                }, 3000);
                 
             } catch (error) {
-                adicionarLog('error', `❌ Erro ao acessar arquivo: ${error.message}`);
+                adicionarLog('error', `❌ Erro: ${error.message}`);
                 await lerArquivoAlternativo();
             }
         }
         
-        // Método alternativo via iframe
         async function lerArquivoAlternativo() {
-            try {
-                adicionarLog('info', '🔄 Tentando método iframe...');
-                
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = 'file:///R:/autoportarias_state.json';
-                
-                iframe.onload = function() {
-                    try {
-                        const content = iframe.contentDocument.body.textContent;
-                        const estado = JSON.parse(content);
-                        document.body.removeChild(iframe);
-                        processarEstadoCarregado(estado);
-                    } catch (error) {
-                        document.body.removeChild(iframe);
-                        adicionarLog('error', `❌ Erro iframe: ${error.message}`);
-                        mostrarFormularioManual();
-                    }
-                };
-                
-                iframe.onerror = function() {
-                    document.body.removeChild(iframe);
-                    adicionarLog('warning', '⚠️ Iframe falhou, solicitando entrada manual...');
-                    mostrarFormularioManual();
-                };
-                
-                document.body.appendChild(iframe);
-                
-                // Timeout de segurança
-                setTimeout(() => {
-                    if (document.body.contains(iframe)) {
-                        document.body.removeChild(iframe);
-                        mostrarFormularioManual();
-                    }
-                }, 10000);
-                
-            } catch (error) {
-                adicionarLog('error', `❌ Erro método alternativo: ${error.message}`);
-                mostrarFormularioManual();
-            }
-        }
-        
-        // Formulário para entrada manual do JSON
-        function mostrarFormularioManual() {
             const jsonInput = prompt(`
-🔧 Acesso automático ao arquivo falhou!
+🔧 Acesso automático falhou!
 
-Por favor, copie e cole o conteúdo do arquivo:
-R:\\autoportarias_state.json
-
-Cole o JSON completo aqui:
+Copie e cole o conteúdo de R:\\autoportarias_state.json:
             `);
             
             if (jsonInput && jsonInput.trim()) {
@@ -574,34 +967,29 @@ Cole o JSON completo aqui:
                     processarEstadoCarregado(estado);
                 } catch (error) {
                     adicionarLog('error', `❌ JSON inválido: ${error.message}`);
-                    alert('❌ JSON inválido! Verifique o formato e tente novamente.');
+                    alert('❌ JSON inválido!');
                 }
-            } else {
-                adicionarLog('warning', '⚠️ Entrada manual cancelada pelo usuário');
             }
         }
         
-        // Processa estado carregado com sucesso
         function processarEstadoCarregado(estado) {
             estadoAtual = estado;
             portariasLote = estado.portarias || [];
             indiceAtual = estado.lote_atual?.index_atual || 0;
             
-            adicionarLog('success', `✅ Estado carregado: ${portariasLote.length} portarias encontradas`);
-            adicionarLog('info', `📊 Lote ID: ${estado.lote_atual?.id || 'N/D'}`);
-            adicionarLog('info', `📋 Posição atual: ${indiceAtual + 1}/${portariasLote.length}`);
+            adicionarLog('success', `✅ Estado carregado: ${portariasLote.length} portarias`);
+            adicionarLog('info', `📊 Lote: ${estado.lote_atual?.id || 'N/D'}`);
             
             atualizarDashboard();
             renderizarPortarias();
         }
         
-        // Processa próxima portaria da fila
         function processarProximaPortaria() {
             const proximaPendente = portariasLote.find(p => p.status !== 'salva');
             
             if (!proximaPendente) {
-                adicionarLog('warning', '⚠️ Nenhuma portaria pendente encontrada');
-                alert('🎉 Todas as portarias foram processadas!');
+                adicionarLog('warning', '🎉 Todas as portarias foram processadas!');
+                alert('🎉 Lote completo!');
                 return;
             }
             
@@ -609,18 +997,10 @@ Cole o JSON completo aqui:
             processarPortariaEspecifica(index);
         }
         
-        // Processa portaria específica
         async function processarPortariaEspecifica(index) {
-            if (!portariasLote[index]) {
-                adicionarLog('error', `❌ Portaria ${index + 1} não encontrada`);
-                return;
-            }
-            
             const portaria = portariasLote[index];
             portaria.status = 'pronta';
-            portaria.timestamp_ultima_acao = new Date().toISOString();
             
-            // Dados para o clipboard (formato para bookmarklet do TRE)
             const dadosParaTRE = {
                 tipo: 'portaria_individual',
                 timestamp: new Date().toISOString(),
@@ -638,89 +1018,57 @@ Cole o JSON completo aqui:
             };
             
             try {
-                await navigator.clipboard.writeText(JSON.stringify(dadosParaTRE, null, 2));
+                await navigator.clipboard.writeText(JSON.stringify(dadosParaTRE));
                 
-                adicionarLog('success', `✅ Portaria ${index + 1} preparada no clipboard`);
-                adicionarLog('info', `📋 Título: ${portaria.titulo}`);
-                adicionarLog('info', '🚀 Agora vá para o TRE e execute o bookmarklet!');
+                adicionarLog('success', `✅ Portaria ${index + 1} no clipboard`);
+                adicionarLog('info', '🚀 Vá para o TRE e execute o bookmarklet!');
                 
-                // Atualiza UI
                 atualizarDashboard();
                 renderizarPortarias();
                 
-                // Notificação visual
-                alert(`✅ Portaria ${index + 1}/${portariasLote.length} está pronta!
-
-📋 Dados colocados no clipboard
-🚀 Próximo passo: Abra o TRE e execute o bookmarklet
-
-Título: ${portaria.titulo}`);
+                alert(`✅ Portaria ${index + 1}/${portariasLote.length} pronta!\n\nDados no clipboard. Vá para o TRE!`);
                 
             } catch (error) {
-                adicionarLog('error', `❌ Erro ao copiar para clipboard: ${error.message}`);
-                alert('❌ Erro ao acessar clipboard! Verifique as permissões do browser.');
+                adicionarLog('error', `❌ Erro clipboard: ${error.message}`);
             }
         }
         
-        // Marca portaria como salva
         function marcarComoSalva(index) {
-            if (!portariasLote[index]) return;
-            
             portariasLote[index].status = 'salva';
-            portariasLote[index].timestamp_ultima_acao = new Date().toISOString();
-            
-            adicionarLog('success', `✅ Portaria ${index + 1} marcada como salva no TRE`);
+            adicionarLog('success', `✅ Portaria ${index + 1} marcada como salva`);
             
             atualizarDashboard();
             renderizarPortarias();
             
-            // Verifica se todas foram processadas
             const pendentes = portariasLote.filter(p => p.status !== 'salva').length;
             if (pendentes === 0) {
-                adicionarLog('success', '🎉 LOTE COMPLETO! Todas as portarias foram processadas!');
-                alert('🎉 PARABÉNS!\n\nTodas as portarias do lote foram processadas com sucesso!');
+                adicionarLog('success', '🎉 LOTE COMPLETO!');
+                alert('🎉 Todas as portarias foram processadas!');
             }
         }
         
-        // Resetar lote
         function resetarLote() {
-            if (confirm('🔄 Resetar todo o lote?\n\nIsso marcará todas as portarias como pendentes novamente.')) {
-                portariasLote.forEach(p => {
-                    p.status = 'pendente';
-                    p.timestamp_ultima_acao = new Date().toISOString();
-                });
-                
-                indiceAtual = 0;
-                
-                adicionarLog('warning', '🔄 Lote resetado - todas as portarias marcadas como pendentes');
-                
+            if (confirm('🔄 Resetar lote?')) {
+                portariasLote.forEach(p => p.status = 'pendente');
+                adicionarLog('warning', '🔄 Lote resetado');
                 atualizarDashboard();
                 renderizarPortarias();
             }
         }
         
-        // Limpar logs
         function limparLogs() {
-            const logs = document.getElementById('logs');
-            logs.innerHTML = `
+            document.getElementById('logs').innerHTML = `
                 <div class="log-entry log-info">
                     <span class="log-timestamp">[${new Date().toLocaleTimeString()}]</span>
-                    Logs limpos - Sistema AutoPortarias v4.0 ativo
+                    Logs limpos - GitHub Pages ativo
                 </div>
             `;
         }
         
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            adicionarLog('success', '🚀 Central de Controle GitHub Pages carregada');
-            adicionarLog('info', '📁 Pronto para carregar arquivo R:\\autoportarias_state.json');
-            
-            // Tenta carregar automaticamente se arquivo estiver disponível
-            setTimeout(() => {
-                if (confirm('🚀 AutoPortarias Central de Controle\n\nTentar carregar automaticamente o arquivo R:\\autoportarias_state.json?')) {
-                    lerArquivoEstado();
-                }
-            }, 1000);
+            adicionarLog('success', '🚀 AutoPortarias GitHub Pages carregado');
+            adicionarLog('info', '📋 4 abas disponíveis: Setup, Testes, Controle, Bookmarklets');
         });
     </script>
 </body>
