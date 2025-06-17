@@ -254,70 +254,102 @@
             const timestamp = new Date().toLocaleTimeString();
             
             console.log(`[${timestamp}] 🎯 FUNÇÃO SALVAR CHAMADA`);
-            console.log(`[${timestamp}] 🌐 Browser: ${navigator.userAgent}`);
-            console.log(`[${timestamp}] 📋 Clipboard API disponível: ${!!navigator.clipboard}`);
-            
             addDebugLog('🎯 Função SALVAR chamada');
+            
+            // Detecção otimizada de browser
+            const isChrome = navigator.userAgent.includes('Chrome') && !navigator.userAgent.includes('Edge');
+            const isFirefox = navigator.userAgent.includes('Firefox');
+            
+            console.log(`[${timestamp}] 🌐 Browser otimizado: ${isChrome ? 'Chrome' : isFirefox ? 'Firefox' : 'Outro'}`);
             
             try {
                 console.log(`[${timestamp}] ✍️ Tentando escrever no clipboard...`);
                 addDebugLog('✍️ Escrevendo SALVAR_CLICADO...');
                 
-                // Tenta escrever no clipboard
-                await navigator.clipboard.writeText('SALVAR_CLICADO');
-                
-                console.log(`[${timestamp}] ✅ Clipboard escrito com sucesso!`);
-                addDebugLog('✅ Escrita no clipboard OK');
-                
-                // Verifica se foi escrito corretamente
-                setTimeout(async () => {
+                // Método otimizado por browser
+                if (isChrome) {
+                    // Chrome: método direto
+                    await navigator.clipboard.writeText('SALVAR_CLICADO');
+                    console.log(`[${timestamp}] ✅ Chrome: clipboard escrito diretamente`);
+                    addDebugLog('✅ Chrome: escrita direta OK');
+                } else if (isFirefox) {
+                    // Firefox: método compatível
+                    console.log(`[${timestamp}] 🦊 Firefox: usando método compatível...`);
+                    addDebugLog('🦊 Firefox: método compatível...');
+                    
                     try {
-                        const readBack = await navigator.clipboard.readText();
-                        console.log(`[${timestamp}] 📖 Verificação clipboard: '${readBack}'`);
+                        await navigator.clipboard.writeText('SALVAR_CLICADO');
+                        console.log(`[${timestamp}] ✅ Firefox: clipboard API funcionou`);
+                        addDebugLog('✅ Firefox: clipboard API OK');
+                    } catch (firefoxError) {
+                        console.log(`[${timestamp}] ⚠️ Firefox: clipboard API falhou, usando fallback`);
+                        addDebugLog('⚠️ Firefox: usando execCommand...');
                         
-                        if (readBack === 'SALVAR_CLICADO') {
-                            console.log(`[${timestamp}] ✅ Clipboard verificado - conteúdo correto!`);
-                            addDebugLog('✅ Verificação: conteúdo correto');
+                        // Fallback execCommand para Firefox
+                        const textArea = document.createElement('textarea');
+                        textArea.value = 'SALVAR_CLICADO';
+                        textArea.style.position = 'fixed';
+                        textArea.style.left = '-999999px';
+                        textArea.style.top = '-999999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        
+                        const success = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        if (success) {
+                            console.log(`[${timestamp}] ✅ Firefox: execCommand funcionou`);
+                            addDebugLog('✅ Firefox: execCommand OK');
                         } else {
-                            console.log(`[${timestamp}] ⚠️ Clipboard verificado - conteúdo diferente!`);
-                            addDebugLog(`⚠️ Verificação: esperado 'SALVAR_CLICADO', lido '${readBack}'`);
+                            throw new Error('execCommand falhou');
                         }
-                    } catch (e) {
-                        console.log(`[${timestamp}] ❌ Erro na verificação: ${e}`);
-                        addDebugLog(`❌ Erro verificação: ${e.message}`);
                     }
-                }, 100);
+                } else {
+                    // Outros browsers
+                    await navigator.clipboard.writeText('SALVAR_CLICADO');
+                }
                 
-                // Feedback visual
-                status.innerHTML = `✅ <strong>SALVAR enviado! (${timestamp})</strong><br>🔄 Python detectará e abrirá nova aba...<br><small>Verifique console para debug</small>`;
+                // Verificação rápida apenas para Chrome
+                if (isChrome) {
+                    setTimeout(async () => {
+                        try {
+                            const readBack = await navigator.clipboard.readText();
+                            if (readBack === 'SALVAR_CLICADO') {
+                                console.log(`[${timestamp}] ✅ Chrome: verificação OK`);
+                                addDebugLog('✅ Chrome: verificação OK');
+                            } else {
+                                console.log(`[${timestamp}] ⚠️ Chrome: verificação inconsistente`);
+                                addDebugLog(`⚠️ Chrome: lido '${readBack}'`);
+                            }
+                        } catch (e) {
+                            console.log(`[${timestamp}] ⚠️ Chrome: verificação falhou (normal)`);
+                        }
+                    }, 50); // Verificação rápida
+                }
+                
+                // Feedback visual otimizado
+                const browserEmoji = isChrome ? '🚀' : isFirefox ? '🦊' : '🌐';
+                status.innerHTML = `✅ <strong>${browserEmoji} SALVAR enviado! (${timestamp})</strong><br>🔄 Python detectará e abrirá nova aba...<br><small>Browser: ${isChrome ? 'Chrome (otimizado)' : isFirefox ? 'Firefox (compatível)' : 'Padrão'}</small>`;
                 status.style.background = 'rgba(76, 175, 80, 0.3)';
                 
-                // Reset após 5 segundos (mais tempo para debug)
+                // Reset mais rápido para Chrome
+                const resetTime = isChrome ? 2000 : 4000;
                 setTimeout(() => {
                     status.innerHTML = 'Comando enviado! Continue testando...';
                     status.style.background = 'rgba(255, 255, 255, 0.1)';
-                }, 5000);
+                }, resetTime);
                 
             } catch (error) {
                 console.error(`[${timestamp}] 💥 ERRO DETALHADO:`, error);
-                console.error(`[${timestamp}] 📝 Erro tipo: ${error.name}`);
-                console.error(`[${timestamp}] 📝 Erro mensagem: ${error.message}`);
-                console.error(`[${timestamp}] 📝 Stack trace:`, error.stack);
-                
                 addDebugLog(`💥 ERRO: ${error.name} - ${error.message}`);
                 
                 status.innerHTML = `❌ <strong>Erro no clipboard! (${timestamp})</strong><br>
                                    🔍 Tipo: ${error.name}<br>
                                    📝 Msg: ${error.message}<br>
+                                   🌐 Browser: ${isChrome ? 'Chrome' : isFirefox ? 'Firefox' : 'Outro'}<br>
                                    <small>Ver console para detalhes</small>`;
                 status.style.background = 'rgba(244, 67, 54, 0.3)';
-                
-                // Tenta método alternativo para Firefox
-                if (navigator.userAgent.includes('Firefox')) {
-                    console.log(`[${timestamp}] 🦊 Firefox detectado - tentando método alternativo...`);
-                    addDebugLog('🦊 Tentando método Firefox alternativo...');
-                    tryFirefoxClipboard();
-                }
             }
         }
         
@@ -326,14 +358,17 @@
             const timestamp = new Date().toLocaleTimeString();
             
             console.log(`[${timestamp}] 🏁 FUNÇÃO FINALIZAR CHAMADA`);
+            addDebugLog('🏁 Função FINALIZAR chamada');
             
             try {
                 console.log(`[${timestamp}] ✍️ Escrevendo FINALIZAR_CLICADO...`);
+                addDebugLog('✍️ Escrevendo FINALIZAR_CLICADO...');
                 
                 // Coloca mensagem de finalização no clipboard
                 await navigator.clipboard.writeText('FINALIZAR_CLICADO');
                 
                 console.log(`[${timestamp}] ✅ FINALIZAR escrito com sucesso!`);
+                addDebugLog('✅ FINALIZAR escrito com sucesso');
                 
                 // Feedback visual
                 status.innerHTML = `🏁 <strong>FINALIZAR enviado! (${timestamp})</strong><br>⏹️ Python encerrará o monitoramento...<br><small>Verifique console Python</small>`;
@@ -346,8 +381,12 @@
                     btn.style.cursor = 'not-allowed';
                 });
                 
+                // Para debug contínuo
+                stopClipboardDebug();
+                
             } catch (error) {
                 console.error(`[${timestamp}] 💥 ERRO FINALIZAR:`, error);
+                addDebugLog(`💥 ERRO FINALIZAR: ${error.message}`);
                 
                 status.innerHTML = `❌ <strong>Erro no clipboard! (${timestamp})</strong><br>📝 ${error.message}`;
                 status.style.background = 'rgba(244, 67, 54, 0.3)';
@@ -358,6 +397,7 @@
         function tryFirefoxClipboard() {
             const timestamp = new Date().toLocaleTimeString();
             console.log(`[${timestamp}] 🦊 Tentando método alternativo Firefox...`);
+            addDebugLog('🦊 Método alternativo Firefox...');
             
             try {
                 // Tenta usar execCommand (método legado)
@@ -371,16 +411,19 @@
                 
                 if (success) {
                     console.log(`[${timestamp}] ✅ execCommand funcionou!`);
+                    addDebugLog('✅ execCommand método funcionou');
                     
                     const status = document.getElementById('status');
                     status.innerHTML = `✅ <strong>SALVAR via execCommand! (${timestamp})</strong><br>🦊 Método Firefox alternativo usado`;
                     status.style.background = 'rgba(76, 175, 80, 0.3)';
                 } else {
                     console.log(`[${timestamp}] ❌ execCommand falhou`);
+                    addDebugLog('❌ execCommand falhou');
                 }
                 
             } catch (e) {
                 console.log(`[${timestamp}] ❌ Método alternativo falhou: ${e}`);
+                addDebugLog(`❌ Método alternativo falhou: ${e.message}`);
             }
         }
         
@@ -389,6 +432,7 @@
         function startClipboardDebug() {
             const timestamp = new Date().toLocaleTimeString();
             console.log(`[${timestamp}] 🔍 Iniciando debug contínuo do clipboard...`);
+            addDebugLog('🔍 Debug contínuo iniciado');
             
             debugInterval = setInterval(async () => {
                 try {
@@ -396,6 +440,7 @@
                     if (content && content.includes('_CLICADO')) {
                         const debugTime = new Date().toLocaleTimeString();
                         console.log(`[${debugTime}] 📋 Clipboard atual: '${content}'`);
+                        addDebugLog(`📋 Clipboard: '${content}'`);
                     }
                 } catch (e) {
                     // Silently ignore para não spammar
@@ -407,6 +452,7 @@
             if (debugInterval) {
                 clearInterval(debugInterval);
                 console.log(`[${new Date().toLocaleTimeString()}] ⏹️ Debug contínuo parado`);
+                addDebugLog('⏹️ Debug contínuo parado');
             }
         }
         
@@ -449,12 +495,16 @@
             } else {
                 console.log(`[${timestamp}] ✅ Clipboard API disponível`);
                 
-                // Testa permissões
-                navigator.permissions.query({name: 'clipboard-write'}).then(result => {
-                    console.log(`[${timestamp}] 📝 Permissão clipboard-write: ${result.state}`);
+            // Testa permissões - versão corrigida
+            if (navigator.permissions) {
+                navigator.permissions.query({name: 'clipboard-read'}).then(result => {
+                    console.log(`[${timestamp}] 📖 Permissão clipboard-read: ${result.state}`);
                 }).catch(e => {
-                    console.log(`[${timestamp}] ❌ Erro ao verificar permissões: ${e}`);
+                    console.log(`[${timestamp}] ❌ Erro ao verificar permissões: ${e.message}`);
                 });
+            } else {
+                console.log(`[${timestamp}] ⚠️ API de permissões não disponível`);
+            }
             }
             
             // Inicia debug contínuo se for Firefox
@@ -579,22 +629,66 @@
         
         // Easter egg: detecta Python rodando
         let pythonDetected = false;
+        let clipboardMonitorCount = 0;
+        
         setInterval(async () => {
+            clipboardMonitorCount++;
+            
             if (!pythonDetected) {
                 try {
                     const clip = await navigator.clipboard.readText();
-                    if (clip === '') {
-                        // Primeiro sinal de que Python pode estar rodando
+                    
+                    // Vários sinais de que Python pode estar rodando
+                    if (clip === '' || clip.startsWith('TESTE_PYTHON_') || clipboardMonitorCount > 10) {
                         pythonDetected = true;
+                        const timestamp = new Date().toLocaleTimeString();
+                        console.log(`[${timestamp}] 🐍 Python possivelmente detectado!`);
+                        addDebugLog('🐍 Python detectado (provavelmente)');
+                        
                         const status = document.getElementById('status');
-                        status.innerHTML = '🐍 <strong>Python detectado!</strong><br>Pronto para teste...';
-                        status.style.background = 'rgba(76, 175, 80, 0.2)';
+                        if (status.innerHTML.includes('Aguardando')) {
+                            status.innerHTML = '🐍 <strong>Python detectado!</strong><br>Pronto para teste de comunicação...';
+                            status.style.background = 'rgba(76, 175, 80, 0.2)';
+                        }
                     }
+                    
+                    // Debug adicional a cada 30 verificações
+                    if (clipboardMonitorCount % 30 === 0) {
+                        console.log(`[${new Date().toLocaleTimeString()}] 🔄 Monitor ativo: ${clipboardMonitorCount} verificações`);
+                    }
+                    
                 } catch (e) {
-                    // Silently ignore
+                    // Silently ignore permission errors
+                    if (clipboardMonitorCount % 50 === 0) {
+                        console.log(`[${new Date().toLocaleTimeString()}] ⚠️ Clipboard monitoring com restrições`);
+                    }
                 }
             }
         }, 2000);
+        
+        // Debug especial para mudanças de aba
+        window.addEventListener('focus', () => {
+            console.log(`[${new Date().toLocaleTimeString()}] 👁️ Aba ganhou foco`);
+            addDebugLog('👁️ Aba ganhou foco');
+        });
+        
+        window.addEventListener('blur', () => {
+            console.log(`[${new Date().toLocaleTimeString()}] 👁️ Aba perdeu foco`);
+            addDebugLog('👁️ Aba perdeu foco');
+        });
+        
+        // Detecta se é uma nova aba e ajusta comportamento
+        if (abaNumero) {
+            setTimeout(() => {
+                console.log(`[${new Date().toLocaleTimeString()}] 🆕 Nova aba ${abaNumero} carregada - Python funcionando!`);
+                addDebugLog(`🆕 Nova aba ${abaNumero} - Python OK!`);
+            }, 1000);
+        }
+        
+        // Debug final quando página é fechada
+        window.addEventListener('beforeunload', () => {
+            console.log(`[${new Date().toLocaleTimeString()}] 👋 Página sendo fechada`);
+        });
     </script>
 </body>
 </html>
