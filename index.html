@@ -3,1073 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoPortarias - Central de Controle GitHub</title>
+    <title>AutoPortarias Controller - Teste Python</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
         }
         
         .header {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-            color: white;
-            padding: 30px;
             text-align: center;
+            margin-bottom: 40px;
         }
         
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 15px 20px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-        }
-        
-        .tab:hover {
-            background: #e9ecef;
-        }
-        
-        .tab.active {
-            background: white;
-            border-bottom-color: #2196F3;
-            color: #2196F3;
-        }
-        
-        .tab-content {
-            display: none;
+        .container {
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .test-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .test-section h3 {
-            color: #2196F3;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .test-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
         }
         
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        }
-        
-        .btn.primary { background: linear-gradient(135deg, #2196F3, #1976D2); color: white; }
-        .btn.success { background: linear-gradient(135deg, #4CAF50, #388E3C); color: white; }
-        .btn.warning { background: linear-gradient(135deg, #FF9800, #F57C00); color: white; }
-        .btn.danger { background: linear-gradient(135deg, #F44336, #D32F2F); color: white; }
-        .btn.info { background: linear-gradient(135deg, #00BCD4, #0097A7); color: white; }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .test-result {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            border-left: 4px solid #ddd;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-        
-        .test-result.success { border-left-color: #4CAF50; background: #E8F5E8; }
-        .test-result.error { border-left-color: #F44336; background: #FFEBEE; }
-        .test-result.warning { border-left-color: #FF9800; background: #FFF3E0; }
-        
-        .status-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        .subtitle {
             margin-bottom: 30px;
+            opacity: 0.9;
+            font-size: 1.2em;
         }
         
-        .status-card {
-            padding: 20px;
-            border-radius: 12px;
+        .test-section {
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .status-card:hover { transform: translateY(-5px); }
-        .status-card.info { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
-        .status-card.success { background: linear-gradient(135deg, #E8F5E8, #C8E6C9); }
-        .status-card.warning { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
-        .status-card.error { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
-        
-        .status-card h3 {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .status-card .value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #1976D2;
-        }
-        
-        .portarias-list {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
             margin-bottom: 30px;
         }
         
-        .portaria-item {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 5px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .portaria-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-        .portaria-item.pendente { border-left-color: #FF9800; }
-        .portaria-item.pronta { border-left-color: #2196F3; }
-        .portaria-item.inserindo { border-left-color: #9C27B0; }
-        .portaria-item.inserida { border-left-color: #4CAF50; }
-        .portaria-item.salva { border-left-color: #607D8B; }
-        .portaria-item.erro { border-left-color: #F44336; }
-        
-        .portaria-header {
+        .buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            gap: 20px;
+            justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
+            margin: 20px 0;
         }
         
-        .portaria-titulo {
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
             font-weight: bold;
-            font-size: 1.1em;
-            color: #1976D2;
-            flex: 1;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 150px;
         }
         
-        .portaria-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .salvar {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
         }
         
-        .status-pendente { background: #FFF3E0; color: #F57C00; }
-        .status-pronta { background: #E3F2FD; color: #1976D2; }
-        .status-inserindo { background: #F3E5F5; color: #7B1FA2; }
-        .status-inserida { background: #E8F5E8; color: #388E3C; }
-        .status-salva { background: #ECEFF1; color: #455A64; }
-        .status-erro { background: #FFEBEE; color: #D32F2F; }
-        
-        .portaria-details {
-            color: #666;
-            font-size: 0.9em;
-            line-height: 1.5;
+        .salvar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .portaria-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .finalizar {
+            background: linear-gradient(45deg, #f44336, #da190b);
+            color: white;
         }
         
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.9em;
+        .finalizar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .logs {
-            background: #1e1e1e;
-            color: #00ff00;
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 2px solid #333;
+            font-weight: bold;
+            min-height: 20px;
+            text-align: center;
         }
-        
-        .log-entry {
-            margin-bottom: 5px;
-            padding: 2px 0;
-        }
-        
-        .log-timestamp {
-            color: #888;
-            margin-right: 10px;
-        }
-        
-        .log-info { color: #00ff00; }
-        .log-warning { color: #ffff00; }
-        .log-error { color: #ff0000; }
-        .log-success { color: #00ffff; }
         
         .instructions {
-            background: linear-gradient(135deg, #E8F5E8, #C8E6C9);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 30px;
-            border: 2px solid #4CAF50;
-        }
-        
-        .instructions h3 {
-            color: #2E7D32;
-            margin-bottom: 15px;
-            font-size: 1.3em;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
         }
         
         .step {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             border-left: 4px solid #4CAF50;
         }
         
-        .step-number {
-            background: #4CAF50;
-            color: white;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .aba-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
             font-weight: bold;
-            margin-right: 10px;
+            z-index: 1000;
+        }
+        
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
             font-size: 0.9em;
         }
         
-        .github-setup {
-            background: linear-gradient(135deg, #24292e, #586069);
-            color: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .github-setup h3 {
-            color: #f6f8fa;
-            margin-bottom: 15px;
-        }
-        
-        .github-setup code {
-            background: rgba(255,255,255,0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .bookmarklet-box {
-            background: #e8f4f8;
-            border: 2px dashed #2196F3;
-            border-radius: 12px;
-            padding: 20px;
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            padding: 15px;
+            border-radius: 8px;
             margin: 20px 0;
-            text-align: center;
-        }
-        
-        .bookmarklet-box h4 {
-            color: #1976D2;
-            margin-bottom: 15px;
-        }
-        
-        .bookmarklet-box .bookmarklet-link {
-            display: inline-block;
-            background: #2196F3;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .bookmarklet-box .bookmarklet-link:hover {
-            background: #1976D2;
-            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
+    <div class="aba-info" id="abaInfo">Aba Principal</div>
+    
+    <div class="header">
+        <h1>🚀 AutoPortarias Controller</h1>
+        <p class="subtitle">Teste de Comunicação Python ↔ Browser via Clipboard</p>
+    </div>
+    
     <div class="container">
-        <div class="header">
-            <h1>🎯 AutoPortarias - Central GitHub</h1>
-            <p>Controle via GitHub Pages + Testes File:// + Sincronização TRE</p>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('setup')">📋 Setup GitHub</div>
-            <div class="tab" onclick="switchTab('tests')">🔬 Testes File://</div>
-            <div class="tab" onclick="switchTab('controller')">🎯 Central Controle</div>
-            <div class="tab" onclick="switchTab('bookmarklets')">📎 Bookmarklets</div>
-        </div>
-        
-        <!-- TAB 1: SETUP GITHUB -->
-        <div class="tab-content active" id="setup">
-            <div class="github-setup">
-                <h3>🚀 Como Configurar GitHub Pages - Passo a Passo</h3>
-                
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <strong>Crie um repositório:</strong>
-                    <br>• Vá para <code>github.com</code> → New Repository
-                    <br>• Nome: <code>autoportarias-controller</code>
-                    <br>• ✅ Public • ✅ Add README
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">2</span>
-                    <strong>Crie o arquivo HTML:</strong>
-                    <br>• No repositório → Add file → Create new file
-                    <br>• Nome: <code>index.html</code>
-                    <br>• Cole todo o código HTML desta página
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <strong>Ative GitHub Pages:</strong>
-                    <br>• Settings → Pages (menu lateral)
-                    <br>• Source: <code>Deploy from a branch</code>
-                    <br>• Branch: <code>main</code> → Folder: <code>/ (root)</code>
-                    <br>• Save
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">4</span>
-                    <strong>Acesse sua página:</strong>
-                    <br>• URL: <code>https://seuusuario.github.io/autoportarias-controller</code>
-                    <br>• Pode levar até 10 minutos para ficar online
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">5</span>
-                    <strong>Prepare o arquivo JSON:</strong>
-                    <br>• Crie: <code>R:\autoportarias_state.json</code>
-                    <br>• Use o exemplo fornecido na documentação
-                </div>
-            </div>
+        <div class="test-section">
+            <h3>🎮 Área de Teste</h3>
             
-            <div class="instructions">
-                <h3>📁 Arquivo JSON de Exemplo</h3>
-                <div style="background: white; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.9em; overflow-x: auto;">
-<pre>{
-  "versao": "4.0",
-  "lote_atual": {
-    "id": "teste_20250617",
-    "status": "pronto",
-    "index_atual": 0
-  },
-  "portarias": [
-    {
-      "id": "001",
-      "ordem": 1,
-      "titulo": "PORTARIA Nº 999, DE 17 DE JUNHO DE 2025",
-      "ementa": "Teste de funcionamento do sistema",
-      "conteudo": "&lt;p style='text-align:justify'&gt;Conteúdo de teste formatado&lt;/p&gt;",
-      "referencia": "DJE-AM nº 99, de 17/06/2025, p. 1",
-      "link": "https://exemplo.com",
-      "status": "pendente"
-    },
-    {
-      "id": "002", 
-      "ordem": 2,
-      "titulo": "PORTARIA Nº 1000, DE 17 DE JUNHO DE 2025",
-      "ementa": "Segunda portaria de teste",
-      "conteudo": "&lt;p style='text-align:justify'&gt;Segundo conteúdo de teste&lt;/p&gt;",
-      "referencia": "DJE-AM nº 99, de 17/06/2025, p. 2", 
-      "link": "https://exemplo.com",
-      "status": "pendente"
-    }
-  ]
-}</pre>
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB 2: TESTES FILE:// -->
-        <div class="tab-content" id="tests">
-            <h2>🔬 Testes de Acesso File:// Protocol</h2>
-            <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
-                <strong>Objetivo:</strong> Verificar se GitHub Pages pode acessar arquivos locais via file:// URLs
-            </p>
-            
-            <div class="test-section">
-                <h3>🎯 Teste A: Window.open() Direto</h3>
-                <p>Tenta abrir arquivo local diretamente com window.open()</p>
-                <div class="test-buttons">
-                    <button class="btn primary" onclick="testeWindowOpenDireto()">
-                        🚀 Teste File:// Direto
-                    </button>
-                </div>
-                <div id="resultadoTesteA" class="test-result" style="display: none;"></div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🎯 Teste B: Com Confirmação do Usuário</h3>
-                <p>Pede confirmação do usuário antes de tentar acessar</p>
-                <div class="test-buttons">
-                    <button class="btn success" onclick="testeComConfirmacao()">
-                        ✅ Teste File:// com Prompt
-                    </button>
-                </div>
-                <div id="resultadoTesteB" class="test-result" style="display: none;"></div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🎯 Teste C: Location.href (Navegação)</h3>
-                <p>Tenta navegar para arquivo local (⚠️ pode sair da página)</p>
-                <div class="test-buttons">
-                    <button class="btn warning" onclick="testeNavegacao()">
-                        ⚠️ Teste File:// Navigation
-                    </button>
-                </div>
-                <div id="resultadoTesteC" class="test-result" style="display: none;"></div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🎯 Teste D: File API (Sempre Funciona)</h3>
-                <p>Usa File API nativa do browser (seleção manual)</p>
-                <div class="test-buttons">
-                    <button class="btn info" onclick="testeFileAPI()">
-                        📁 Teste File API
-                    </button>
-                </div>
-                <div id="resultadoTesteD" class="test-result" style="display: none;"></div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🎯 Teste E: Iframe Method</h3>
-                <p>Tenta carregar arquivo em iframe oculto</p>
-                <div class="test-buttons">
-                    <button class="btn info" onclick="testeIframe()">
-                        🖼️ Teste Iframe Method
-                    </button>
-                </div>
-                <div id="resultadoTesteE" class="test-result" style="display: none;"></div>
-            </div>
-            
-            <div class="instructions">
-                <h3>📊 Interpretação dos Resultados</h3>
-                <div class="step">
-                    <span class="step-number">✅</span>
-                    <strong>Se Testes A, B, C funcionarem:</strong> GitHub Pages pode acessar file:// → File-Based State viável!
-                </div>
-                <div class="step">
-                    <span class="step-number">❌</span>
-                    <strong>Se Testes A, B, C falharem:</strong> Acesso file:// bloqueado → Usar Clipboard Rotating
-                </div>
-                <div class="step">
-                    <span class="step-number">📁</span>
-                    <strong>Teste D sempre funciona:</strong> File API requer seleção manual do usuário
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB 3: CENTRAL DE CONTROLE -->
-        <div class="tab-content" id="controller">
-            <h2>🎯 Central de Controle de Portarias</h2>
-            
-            <!-- Status Dashboard -->
-            <div class="status-panel">
-                <div class="status-card info">
-                    <h3>📁 File Access</h3>
-                    <div class="value" id="fileStatus">❓</div>
-                </div>
-                <div class="status-card success">
-                    <h3>📋 Total Portarias</h3>
-                    <div class="value" id="totalPortarias">0</div>
-                </div>
-                <div class="status-card warning">
-                    <h3>⏳ Pendentes</h3>
-                    <div class="value" id="pendentesCount">0</div>
-                </div>
-                <div class="status-card error">
-                    <h3>✅ Processadas</h3>
-                    <div class="value" id="processadasCount">0</div>
-                </div>
-            </div>
-            
-            <!-- Controles Principais -->
-            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
-                <button class="btn primary" onclick="lerArquivoEstado()">
-                    📁 Ler R:\autoportarias_state.json
+            <div class="buttons">
+                <button class="salvar" onclick="salvar()">
+                    💾 SALVAR
                 </button>
-                <button class="btn success" onclick="processarProximaPortaria()" id="btnProxima" disabled>
-                    ▶️ Processar Próxima
-                </button>
-                <button class="btn warning" onclick="resetarLote()">
-                    🔄 Resetar Lote
-                </button>
-                <button class="btn danger" onclick="limparLogs()">
-                    🗑️ Limpar Logs
+                
+                <button class="finalizar" onclick="finalizar()">
+                    🏁 FINALIZAR
                 </button>
             </div>
             
-            <!-- Lista de Portarias -->
-            <div class="portarias-list">
-                <h3>📝 Portarias do Lote Atual</h3>
-                <div id="portariasList">
-                    <p style="text-align: center; color: #666; padding: 40px;">
-                        🚀 Clique em "Ler R:\autoportarias_state.json" para carregar as portarias
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Logs -->
-            <div>
-                <h3>📊 Logs do Sistema</h3>
-                <div class="logs" id="logs">
-                    <div class="log-entry log-info">
-                        <span class="log-timestamp">[00:00:00]</span>
-                        Sistema AutoPortarias v4.0 GitHub Pages inicializado
-                    </div>
-                    <div class="log-entry log-info">
-                        <span class="log-timestamp">[00:00:01]</span>
-                        Aguardando carregamento do arquivo de estado...
-                    </div>
-                </div>
+            <div class="status" id="status">
+                Aguardando comando Python...
             </div>
         </div>
+    </div>
+    
+    <div class="container instructions">
+        <h3>📋 Instruções Passo a Passo</h3>
         
-        <!-- TAB 4: BOOKMARKLETS -->
-        <div class="tab-content" id="bookmarklets">
-            <h2>📎 Bookmarklets para TRE</h2>
-            
-            <div class="bookmarklet-box">
-                <h4>🎯 Bookmarklet TRE - Leitor GitHub</h4>
-                <p>Arraste este link para sua barra de favoritos:</p>
-                <a href="javascript:(function(){async function processarDadosGitHub(){try{const clipboardText=await navigator.clipboard.readText();if(!clipboardText){alert('❌ Clipboard vazio');return;}let dados;try{dados=JSON.parse(clipboardText);}catch(e){alert('❌ Dados inválidos no clipboard');return;}if(dados.tipo==='portaria_individual'&&dados.dados){const d=dados.dados;const editores={};Object.keys(tinymce.editors).forEach(key=>{const ed=tinymce.editors[key];const con=ed.getContainer();let par=con;for(let i=0;i<10;i++){par=par.parentNode;if(par&&par.textContent){const txt=par.textContent.toLowerCase();if(txt.includes('ementa')&&!txt.includes('não exibir')){editores.EMENTA=key;break;}if(txt.includes('conteúdo')||txt.includes('conteudo')){editores.CONTEUDO=key;break;}if(txt.includes('referência')||txt.includes('referencia')){editores.REFERENCIA=key;break;}}}});if(d.titulo){const tf=document.getElementById('form-widgets-title');if(tf){tf.value=d.titulo;tf.dispatchEvent(new Event('change',{bubbles:true}));}}if(editores.EMENTA&&d.ementa){const ej=`<p style='text-align: justify;'>${d.ementa}</p>`;tinymce.get(editores.EMENTA).setContent(ej);}if(editores.CONTEUDO&&d.conteudo){tinymce.get(editores.CONTEUDO).setContent(d.conteudo);}if(editores.REFERENCIA&&d.referencia){tinymce.get(editores.REFERENCIA).setContent(d.referencia);}const ce=document.getElementById('form-widgets-display_ementa-0');if(ce){ce.checked=true;ce.dispatchEvent(new Event('change',{bubbles:true}));}const notification=document.createElement('div');notification.style.cssText='position:fixed;top:20px;right:20px;background:#4CAF50;color:white;padding:15px 20px;border-radius:8px;z-index:999999;font-family:system-ui;max-width:350px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';notification.innerHTML=`<h4 style='margin:0 0 8px 0;font-size:14px;'>✅ Portaria ${d.ordem}/${d.total}</h4><p style='margin:0;font-size:12px;'>${d.titulo}</p>`;document.body.appendChild(notification);setTimeout(()=>{if(document.body.contains(notification))document.body.removeChild(notification);},7000);}else{alert('❌ Formato de dados não reconhecido');}}catch(error){alert('❌ Erro: '+error.message);}}if(confirm('🎯 AutoPortarias TRE\n\nProcessar dados do GitHub Pages?')){processarDadosGitHub();}})();" class="bookmarklet-link">
-                    🎯 AutoPortarias TRE
-                </a>
-                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
-                    <strong>Como usar:</strong> Após preparar uma portaria no GitHub Pages, vá para o TRE e clique neste bookmarklet
-                </p>
-            </div>
-            
-            <div class="instructions">
-                <h3>🔄 Fluxo de Trabalho Completo</h3>
-                
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <strong>GitHub Pages:</strong> Carregue o arquivo R:\autoportarias_state.json e clique "Processar Próxima"
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">2</span>
-                    <strong>Nova aba TRE:</strong> Abra https://tambaqui.tre-am.jus.br/.../++add++Ato
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <strong>Execute bookmarklet:</strong> Clique no bookmarklet "AutoPortarias TRE" para inserir os dados
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">4</span>
-                    <strong>Salve no TRE:</strong> Revise e salve a portaria no sistema TRE
-                </div>
-                
-                <div class="step">
-                    <span class="step-number">5</span>
-                    <strong>Volte ao GitHub:</strong> Marque como "Salva" e repita para próxima portaria
-                </div>
+        <div class="step">
+            <strong>1.</strong> Execute o script Python: <span class="code">python test_monitor.py</span>
+        </div>
+        
+        <div class="step">
+            <strong>2.</strong> O Firefox será aberto automaticamente nesta página
+        </div>
+        
+        <div class="step">
+            <strong>3.</strong> Clique em <strong>"SALVAR"</strong> - Python detectará e abrirá nova aba
+        </div>
+        
+        <div class="step">
+            <strong>4.</strong> Clique em <strong>"FINALIZAR"</strong> - Python encerrará o monitoramento
+        </div>
+        
+        <div class="step">
+            <strong>5.</strong> Verifique o console do Python para ver as detecções em tempo real
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Importante:</strong> Esta página precisa ser servida via HTTPS para acessar o clipboard. 
+            GitHub Pages já fornece HTTPS automaticamente!
+        </div>
+    </div>
+    
+    <div class="container">
+        <h3>🔍 Como Funciona</h3>
+        <p><strong>Clipboard Rotating:</strong> JavaScript atualiza clipboard → Python detecta mudança → Ação automática</p>
+        
+        <div style="margin-top: 20px;">
+            <div style="display: flex; align-items: center; margin: 10px 0;">
+                <span style="background: #4CAF50; padding: 5px 10px; border-radius: 5px; margin-right: 10px;">Browser</span>
+                <span>→ Clipboard →</span>
+                <span style="background: #2196F3; padding: 5px 10px; border-radius: 5px; margin-left: 10px;">Python</span>
             </div>
         </div>
     </div>
 
     <script>
-        // Estado global da aplicação
-        let estadoAtual = null;
-        let portariasLote = [];
-        let indiceAtual = 0;
+        // Detecta se é uma nova aba baseado na URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const abaNumero = urlParams.get('aba');
         
-        // Função para trocar tabs
-        function switchTab(tabName) {
-            // Remove active de todas as tabs
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        if (abaNumero) {
+            document.getElementById('abaInfo').textContent = `Aba ${abaNumero}`;
+            document.querySelector('.subtitle').textContent = `Aba ${abaNumero} - Nova aba aberta pelo Python!`;
             
-            // Adiciona active na tab clicada
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
+            // Feedback especial para novas abas
+            const status = document.getElementById('status');
+            status.innerHTML = `🎉 <strong>Nova aba ${abaNumero} aberta pelo Python!</strong><br>Continue testando com os botões`;
+            status.style.background = 'rgba(76, 175, 80, 0.3)';
         }
         
-        // Função para adicionar logs
-        function adicionarLog(tipo, mensagem) {
-            const timestamp = new Date().toLocaleTimeString();
-            const logs = document.getElementById('logs');
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry log-${tipo}`;
-            logEntry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span>${mensagem}`;
-            logs.appendChild(logEntry);
-            logs.scrollTop = logs.scrollHeight;
-        }
-        
-        // Função para mostrar resultado dos testes
-        function mostrarResultadoTeste(testeId, sucesso, mensagem, detalhes = '') {
-            const resultado = document.getElementById(testeId);
-            resultado.className = `test-result ${sucesso ? 'success' : 'error'}`;
-            resultado.innerHTML = `
-                <strong>${sucesso ? '✅ SUCESSO' : '❌ FALHA'}:</strong> ${mensagem}
-                ${detalhes ? `<br><small>${detalhes}</small>` : ''}
-            `;
-            resultado.style.display = 'block';
-        }
-        
-        // TESTES FILE://
-        
-        function testeWindowOpenDireto() {
+        async function salvar() {
             try {
-                const testWindow = window.open('file:///R:/Temp/TESTE.txt', '_test', 'width=600,height=400');
+                // Coloca mensagem específica no clipboard
+                await navigator.clipboard.writeText('SALVAR_CLICADO');
                 
+                // Feedback visual
+                const status = document.getElementById('status');
+                status.innerHTML = '✅ <strong>SALVAR enviado!</strong><br>🔄 Python detectará e abrirá nova aba...';
+                status.style.background = 'rgba(76, 175, 80, 0.3)';
+                
+                // Reset após 3 segundos
                 setTimeout(() => {
-                    if (testWindow && !testWindow.closed) {
-                        testWindow.close();
-                        mostrarResultadoTeste('resultadoTesteA', true, 
-                            'window.open() conseguiu abrir arquivo local!',
-                            'GitHub Pages pode acessar file:// URLs');
-                    } else {
-                        mostrarResultadoTeste('resultadoTesteA', false,
-                            'window.open() foi bloqueado',
-                            'Browser/GitHub Pages não permite acesso file://');
-                    }
-                }, 2000);
-                
-            } catch (error) {
-                mostrarResultadoTeste('resultadoTesteA', false,
-                    'Exceção capturada: ' + error.message,
-                    'Acesso file:// completamente bloqueado');
-            }
-        }
-        
-        function testeComConfirmacao() {
-            const path = prompt('Confirme o caminho do arquivo:', 'file:///R:/Temp/TESTE.txt');
-            if (path) {
-                try {
-                    const testWindow = window.open(path, '_test', 'width=600,height=400');
-                    
-                    setTimeout(() => {
-                        if (testWindow && !testWindow.closed) {
-                            testWindow.close();
-                            mostrarResultadoTeste('resultadoTesteB', true,
-                                'Confirmação do usuário permitiu acesso',
-                                'Interação manual contorna restrições');
-                        } else {
-                            mostrarResultadoTeste('resultadoTesteB', false,
-                                'Mesmo com confirmação foi bloqueado',
-                                'Restrições aplicadas independente de interação');
-                        }
-                    }, 2000);
-                    
-                } catch (error) {
-                    mostrarResultadoTeste('resultadoTesteB', false,
-                        'Erro mesmo com confirmação: ' + error.message);
-                }
-            }
-        }
-        
-        function testeNavegacao() {
-            if (confirm('⚠️ Este teste pode navegar para fora da página!\n\nContinuar?')) {
-                try {
-                    window.location.href = 'file:///R:/Temp/TESTE.txt';
-                    // Se chegou aqui, funcionou
-                    mostrarResultadoTeste('resultadoTesteC', true,
-                        'Navegação para file:// iniciada',
-                        'Se você ainda está vendo isso, pode ter funcionado parcialmente');
-                } catch (error) {
-                    mostrarResultadoTeste('resultadoTesteC', false,
-                        'Navegação bloqueada: ' + error.message);
-                }
-            }
-        }
-        
-        function testeFileAPI() {
-            try {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.txt,.json';
-                
-                input.onchange = function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            mostrarResultadoTeste('resultadoTesteD', true,
-                                'File API funcionou perfeitamente!',
-                                `Arquivo: ${file.name} (${file.size} bytes)`);
-                        };
-                        reader.readAsText(file);
-                    }
-                };
-                
-                input.click();
-                
-                // Fallback se usuário cancelar
-                setTimeout(() => {
-                    if (!document.getElementById('resultadoTesteD').innerHTML.includes('SUCESSO')) {
-                        mostrarResultadoTeste('resultadoTesteD', false,
-                            'Usuário cancelou seleção ou erro',
-                            'File API requer seleção manual do arquivo');
-                    }
-                }, 5000);
-                
-            } catch (error) {
-                mostrarResultadoTeste('resultadoTesteD', false,
-                    'File API não disponível: ' + error.message);
-            }
-        }
-        
-        function testeIframe() {
-            try {
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = 'file:///R:/Temp/TESTE.txt';
-                
-                iframe.onload = function() {
-                    try {
-                        const content = iframe.contentDocument.body.textContent;
-                        document.body.removeChild(iframe);
-                        mostrarResultadoTeste('resultadoTesteE', true,
-                            'Iframe method funcionou!',
-                            `Conteúdo lido: ${content.substring(0, 50)}...`);
-                    } catch (error) {
-                        document.body.removeChild(iframe);
-                        mostrarResultadoTeste('resultadoTesteE', false,
-                            'Iframe carregou mas não conseguiu ler: ' + error.message);
-                    }
-                };
-                
-                iframe.onerror = function() {
-                    document.body.removeChild(iframe);
-                    mostrarResultadoTeste('resultadoTesteE', false,
-                        'Iframe não conseguiu carregar arquivo',
-                        'Same-origin policy bloqueou acesso');
-                };
-                
-                document.body.appendChild(iframe);
-                
-                // Timeout de segurança
-                setTimeout(() => {
-                    if (document.body.contains(iframe)) {
-                        document.body.removeChild(iframe);
-                        mostrarResultadoTeste('resultadoTesteE', false,
-                            'Timeout - iframe method falhou',
-                            'Arquivo não pôde ser carregado em 10 segundos');
-                    }
-                }, 10000);
-                
-            } catch (error) {
-                mostrarResultadoTeste('resultadoTesteE', false,
-                    'Erro criando iframe: ' + error.message);
-            }
-        }
-        
-        // CENTRAL DE CONTROLE
-        
-        function atualizarDashboard() {
-            if (!portariasLote.length) {
-                document.getElementById('fileStatus').textContent = '❌';
-                document.getElementById('totalPortarias').textContent = '0';
-                document.getElementById('pendentesCount').textContent = '0';
-                document.getElementById('processadasCount').textContent = '0';
-                return;
-            }
-            
-            document.getElementById('fileStatus').textContent = '✅';
-            document.getElementById('totalPortarias').textContent = portariasLote.length;
-            
-            const pendentes = portariasLote.filter(p => p.status !== 'salva').length;
-            const processadas = portariasLote.filter(p => p.status === 'salva').length;
-            
-            document.getElementById('pendentesCount').textContent = pendentes;
-            document.getElementById('processadasCount').textContent = processadas;
-            
-            document.getElementById('btnProxima').disabled = pendentes === 0;
-        }
-        
-        function renderizarPortarias() {
-            const container = document.getElementById('portariasList');
-            
-            if (!portariasLote.length) {
-                container.innerHTML = `
-                    <p style="text-align: center; color: #666; padding: 40px;">
-                        📁 Nenhuma portaria carregada. Clique em "Ler Arquivo" para carregar.
-                    </p>
-                `;
-                return;
-            }
-            
-            container.innerHTML = '';
-            
-            portariasLote.forEach((portaria, index) => {
-                const item = document.createElement('div');
-                item.className = `portaria-item ${portaria.status}`;
-                
-                const statusText = {
-                    'pendente': 'Aguardando',
-                    'pronta': 'Pronta para TRE',
-                    'inserindo': 'Inserindo no TRE',
-                    'inserida': 'Inserida no TRE',
-                    'salva': 'Salva no TRE',
-                    'erro': 'Erro'
-                };
-                
-                item.innerHTML = `
-                    <div class="portaria-header">
-                        <div class="portaria-titulo">${portaria.titulo}</div>
-                        <div class="portaria-status status-${portaria.status}">
-                            ${statusText[portaria.status] || portaria.status}
-                        </div>
-                    </div>
-                    <div class="portaria-details">
-                        <strong>Ordem:</strong> ${index + 1}/${portariasLote.length}<br>
-                        <strong>Ementa:</strong> ${portaria.ementa ? portaria.ementa.substring(0, 100) + '...' : 'Não definida'}<br>
-                        <strong>Status:</strong> ${portaria.status}
-                    </div>
-                    <div class="portaria-actions">
-                        <button class="btn btn-small primary" onclick="processarPortariaEspecifica(${index})" 
-                                ${portaria.status === 'salva' ? 'disabled' : ''}>
-                            📋 Preparar para TRE
-                        </button>
-                        <button class="btn btn-small success" onclick="marcarComoSalva(${index})"
-                                ${portaria.status === 'salva' ? 'disabled' : ''}>
-                            ✅ Marcar como Salva
-                        </button>
-                    </div>
-                `;
-                
-                container.appendChild(item);
-            });
-        }
-        
-        async function lerArquivoEstado() {
-            adicionarLog('info', '📁 Tentando ler R:\\autoportarias_state.json...');
-            
-            try {
-                // Método 1: window.open
-                const fileWindow = window.open('file:///R:/autoportarias_state.json', '_blank', 'width=800,height=600');
-                
-                if (!fileWindow) {
-                    throw new Error('Popup bloqueado');
-                }
-                
-                setTimeout(async () => {
-                    try {
-                        const content = fileWindow.contentDocument.body.textContent;
-                        fileWindow.close();
-                        
-                        if (content && content.trim()) {
-                            const estado = JSON.parse(content);
-                            processarEstadoCarregado(estado);
-                        } else {
-                            throw new Error('Arquivo vazio');
-                        }
-                    } catch (error) {
-                        fileWindow.close();
-                        adicionarLog('warning', '⚠️ Método direto falhou, tentando alternativo...');
-                        await lerArquivoAlternativo();
-                    }
+                    status.innerHTML = 'Comando enviado! Continue testando...';
+                    status.style.background = 'rgba(255, 255, 255, 0.1)';
                 }, 3000);
                 
             } catch (error) {
-                adicionarLog('error', `❌ Erro: ${error.message}`);
-                await lerArquivoAlternativo();
+                console.error('Erro ao acessar clipboard:', error);
+                
+                const status = document.getElementById('status');
+                status.innerHTML = '❌ <strong>Erro no clipboard!</strong><br>Verifique se está usando HTTPS';
+                status.style.background = 'rgba(244, 67, 54, 0.3)';
             }
         }
         
-        async function lerArquivoAlternativo() {
-            const jsonInput = prompt(`
-🔧 Acesso automático falhou!
-
-Copie e cole o conteúdo de R:\\autoportarias_state.json:
-            `);
-            
-            if (jsonInput && jsonInput.trim()) {
-                try {
-                    const estado = JSON.parse(jsonInput.trim());
-                    processarEstadoCarregado(estado);
-                } catch (error) {
-                    adicionarLog('error', `❌ JSON inválido: ${error.message}`);
-                    alert('❌ JSON inválido!');
-                }
-            }
-        }
-        
-        function processarEstadoCarregado(estado) {
-            estadoAtual = estado;
-            portariasLote = estado.portarias || [];
-            indiceAtual = estado.lote_atual?.index_atual || 0;
-            
-            adicionarLog('success', `✅ Estado carregado: ${portariasLote.length} portarias`);
-            adicionarLog('info', `📊 Lote: ${estado.lote_atual?.id || 'N/D'}`);
-            
-            atualizarDashboard();
-            renderizarPortarias();
-        }
-        
-        function processarProximaPortaria() {
-            const proximaPendente = portariasLote.find(p => p.status !== 'salva');
-            
-            if (!proximaPendente) {
-                adicionarLog('warning', '🎉 Todas as portarias foram processadas!');
-                alert('🎉 Lote completo!');
-                return;
-            }
-            
-            const index = portariasLote.indexOf(proximaPendente);
-            processarPortariaEspecifica(index);
-        }
-        
-        async function processarPortariaEspecifica(index) {
-            const portaria = portariasLote[index];
-            portaria.status = 'pronta';
-            
-            const dadosParaTRE = {
-                tipo: 'portaria_individual',
-                timestamp: new Date().toISOString(),
-                fonte: 'github_controller',
-                dados: {
-                    titulo: portaria.titulo,
-                    ementa: portaria.ementa,
-                    conteudo: portaria.conteudo,
-                    referencia: portaria.referencia,
-                    link: portaria.link,
-                    ordem: index + 1,
-                    total: portariasLote.length,
-                    lote_id: estadoAtual.lote_atual?.id
-                }
-            };
-            
+        async function finalizar() {
             try {
-                await navigator.clipboard.writeText(JSON.stringify(dadosParaTRE));
+                // Coloca mensagem de finalização no clipboard
+                await navigator.clipboard.writeText('FINALIZAR_CLICADO');
                 
-                adicionarLog('success', `✅ Portaria ${index + 1} no clipboard`);
-                adicionarLog('info', '🚀 Vá para o TRE e execute o bookmarklet!');
+                // Feedback visual
+                const status = document.getElementById('status');
+                status.innerHTML = '🏁 <strong>FINALIZAR enviado!</strong><br>⏹️ Python encerrará o monitoramento...';
+                status.style.background = 'rgba(244, 67, 54, 0.3)';
                 
-                atualizarDashboard();
-                renderizarPortarias();
-                
-                alert(`✅ Portaria ${index + 1}/${portariasLote.length} pronta!\n\nDados no clipboard. Vá para o TRE!`);
+                // Desabilita botões
+                document.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                });
                 
             } catch (error) {
-                adicionarLog('error', `❌ Erro clipboard: ${error.message}`);
+                console.error('Erro ao acessar clipboard:', error);
+                
+                const status = document.getElementById('status');
+                status.innerHTML = '❌ <strong>Erro no clipboard!</strong><br>Verifique se está usando HTTPS';
+                status.style.background = 'rgba(244, 67, 54, 0.3)';
             }
         }
         
-        function marcarComoSalva(index) {
-            portariasLote[index].status = 'salva';
-            adicionarLog('success', `✅ Portaria ${index + 1} marcada como salva`);
+        // Inicialização da página
+        window.addEventListener('load', () => {
+            const status = document.getElementById('status');
             
-            atualizarDashboard();
-            renderizarPortarias();
+            if (!abaNumero) {
+                status.innerHTML = '🟢 <strong>Página carregada!</strong><br>Execute o Python e teste os botões';
+                status.style.background = 'rgba(33, 150, 243, 0.3)';
+            }
             
-            const pendentes = portariasLote.filter(p => p.status !== 'salva').length;
-            if (pendentes === 0) {
-                adicionarLog('success', '🎉 LOTE COMPLETO!');
-                alert('🎉 Todas as portarias foram processadas!');
+            // Testa se clipboard API está disponível
+            if (!navigator.clipboard) {
+                status.innerHTML = '⚠️ <strong>Clipboard API não disponível!</strong><br>Use HTTPS ou localhost';
+                status.style.background = 'rgba(255, 152, 0, 0.3)';
             }
-        }
-        
-        function resetarLote() {
-            if (confirm('🔄 Resetar lote?')) {
-                portariasLote.forEach(p => p.status = 'pendente');
-                adicionarLog('warning', '🔄 Lote resetado');
-                atualizarDashboard();
-                renderizarPortarias();
-            }
-        }
-        
-        function limparLogs() {
-            document.getElementById('logs').innerHTML = `
-                <div class="log-entry log-info">
-                    <span class="log-timestamp">[${new Date().toLocaleTimeString()}]</span>
-                    Logs limpos - GitHub Pages ativo
-                </div>
-            `;
-        }
-        
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            adicionarLog('success', '🚀 AutoPortarias GitHub Pages carregado');
-            adicionarLog('info', '📋 4 abas disponíveis: Setup, Testes, Controle, Bookmarklets');
         });
+        
+        // Easter egg: detecta Python rodando
+        let pythonDetected = false;
+        setInterval(async () => {
+            if (!pythonDetected) {
+                try {
+                    const clip = await navigator.clipboard.readText();
+                    if (clip === '') {
+                        // Primeiro sinal de que Python pode estar rodando
+                        pythonDetected = true;
+                        const status = document.getElementById('status');
+                        status.innerHTML = '🐍 <strong>Python detectado!</strong><br>Pronto para teste...';
+                        status.style.background = 'rgba(76, 175, 80, 0.2)';
+                    }
+                } catch (e) {
+                    // Silently ignore
+                }
+            }
+        }, 2000);
     </script>
 </body>
 </html>
