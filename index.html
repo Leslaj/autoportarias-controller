@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoPortarias Controller - Teste Aba A→B</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            margin-bottom: 25px;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .aba-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            z-index: 1000;
+            border: 2px solid #4CAF50;
+        }
+        
+        .aba-nova {
+            border-color: #FF9800 !important;
+            background: rgba(255, 152, 0, 0.8) !important;
+        }
+        
+        .test-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 140px;
+        }
+        
+        .salvar {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .salvar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .finalizar {
+            background: linear-gradient(45deg, #f44336, #da190b);
+            color: white;
+        }
+        
+        .finalizar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cancelar {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            color: white;
+            display: none;
+        }
+        
+        .cancelar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-weight: bold;
+            min-height: 25px;
+            text-align: center;
+        }
+        
+        .countdown {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 152, 0, 0.3);
+            border: 2px solid rgba(255, 152, 0, 0.6);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .countdown-timer {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .countdown-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .countdown-progress {
+            height: 100%;
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            transition: width 0.1s linear;
+            border-radius: 10px;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .flow-arrow {
+            font-size: 1.2em;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .step {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+            font-size: 0.95em;
+        }
+        
+        .debug-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.6);
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid rgba(244, 67, 54, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="aba-info" id="abaInfo">Aba A (Original)</div>
+    
+    <div class="header">
+        <h1>🚀 AutoPortarias Controller v2.0</h1>
+        <p class="subtitle" id="subtitle">Teste: Aba A → Abre Aba B → Timer 15s → Redirect A</p>
+    </div>
+    
+    <div class="container">
+        <div class="test-section">
+            <h3>🎮 Controle de Abas</h3>
+            
+            <!-- Fluxo Visual -->
+            <div class="flow-diagram">
+                <div class="flow-step">🖱️ Clica SALVAR</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">🆕 Aba B Abre</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">⏰ Timer 15s</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">🔄 Aba A → about:blank</div>
+            </div>
+            
+            <div class="buttons">
+                <button class="salvar" onclick="salvar()" id="btnSalvar">
+                    💾 SALVAR
+                </button>
+                
+                <button class="cancelar" onclick="cancelarRedirect()" id="btnCancelar">
+                    ❌ CANCELAR REDIRECT
+                </button>
+                
+                <button class="finalizar" onclick="finalizar()" id="btnFinalizar">
+                    🏁 FINALIZAR
+                </button>
+            </div>
+            
+            <!-- Countdown Visual -->
+            <div class="countdown" id="countdownSection">
+                <div style="font-size: 1.2em; margin-bottom: 10px;">
+                    🔄 <strong>Redirecionamento em:</strong>
+                </div>
+                <div class="countdown-timer" id="countdownTimer">15</div>
+                <div class="countdown-bar">
+                    <div class="countdown-progress" id="countdownProgress"></div>
+                </div>
+                <div style="font-size: 0.9em; opacity: 0.9;">
+                    Nova aba aberta! Esta aba será redirecionada para about:blank
+                </div>
+            </div>
+            
+            <div class="status" id="status">
+                Aguardando comando...
+            </div>
+        </div>
+    </div>
+    
+    <div class="container instructions">
+        <h3>📋 Funcionamento</h3>
+        
+        <div class="step">
+            <strong>1.</strong> Execute o Python: <code>python monitor_enhanced.py</code>
+        </div>
+        
+        <div class="step">
+            <strong>2.</strong> Esta é a <strong>Aba A (Original)</strong> - onde você clica SALVAR
+        </div>
+        
+        <div class="step">
+            <strong>3.</strong> Ao clicar SALVAR: Python abre <strong>Aba B (Nova)</strong>
+        </div>
+        
+        <div class="step">
+            <strong>4.</strong> <strong>Timer 15s</strong> inicia nesta Aba A com countdown visual
+        </div>
+        
+        <div class="step">
+            <strong>5.</strong> Após 15s: <strong>Aba A redireciona</strong> para about:blank automaticamente
+        </div>
+        
+        <div class="step">
+            <strong>6.</strong> <strong>Aba B permanece</strong> aberta para continuar trabalho
+        </div>
+    </div>
+    
+    <div class="container">
+        <h3>🔍 Debug</h3>
+        <button style="background: #9C27B0; color: white; padding: 8px 15px; border-radius: 5px; border: none; cursor: pointer;" 
+                onclick="toggleDebug()">
+            📊 Toggle Debug Log
+        </button>
+        
+        <div class="debug-section" id="debugLog">
+            <div style="color: #4CAF50; font-weight: bold; margin-bottom: 8px;">🔍 Debug Log:</div>
+            <div id="debugContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // === VARIÁVEIS GLOBAIS ===
+        let redirectTimer = null;
+        let countdownInterval = null;
+        let redirectCanceled = false;
+        let isNovaAba = false;
+        let debugEnabled = false;
+        
+        // === DETECÇÃO DE TIPO DE ABA ===
+        function detectarTipoAba() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const abaNumero = urlParams.get('aba');
+            const role = urlParams.get('role');
+            
+            if (abaNumero || role === 'nova') {
+                isNovaAba = true;
+                document.getElementById('abaInfo').textContent = `Aba ${abaNumero || 'B'} (Nova)`;
+                document.getElementById('abaInfo').classList.add('aba-nova');
+                document.getElementById('subtitle').textContent = `Aba ${abaNumero || 'B'} - Nova aba aberta pelo Python!`;
+                
+                // Status especial para nova aba
+                const status = document.getElementById('status');
+                status.innerHTML = `🎉 <strong>Nova aba aberta!</strong><br>🎯 Aba original iniciará timer de 15s<br><small>Continue trabalhando nesta aba</small>`;
+                status.className = 'status success';
+                
+                // Desabilita SALVAR na nova aba (opcional)
+                document.getElementById('btnSalvar').disabled = true;
+                document.getElementById('btnSalvar').textContent = '💾 NOVA ABA';
+                
+                addDebugLog(`🆕 Nova aba detectada: ${abaNumero || 'B'}`);
+            } else {
+                isNovaAba = false;
+                addDebugLog('🏠 Aba original detectada');
+            }
+        }
+        
+        // === FUNÇÃO SALVAR APRIMORADA ===
+        async function salvar() {
+            if (isNovaAba) {
+                showStatus('⚠️ Esta é uma nova aba! Use a aba original para SALVAR', 'error');
+                return;
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            addDebugLog(`💾 SALVAR iniciado em: ${timestamp}`);
+            
+            try {
+                // 1. Envia comando para Python
+                await navigator.clipboard.writeText('SALVAR_CLICADO');
+                addDebugLog('✅ SALVAR_CLICADO enviado para Python');
+                
+                // 2. Feedback imediato
+                showStatus('✅ <strong>SALVAR enviado!</strong><br>🔄 Python abrindo nova aba...', 'success');
+                
+                // 3. Aguarda um pouco para Python processar
+                setTimeout(() => {
+                    iniciarTimerRedirecionamento();
+                }, 2000); // 2s para dar tempo da nova aba abrir
+                
+            } catch (error) {
+                addDebugLog(`💥 Erro SALVAR: ${error.message}`);
+                showStatus(`❌ <strong>Erro!</strong><br>${error.message}`, 'error');
+            }
+        }
+        
+        // === TIMER DE REDIRECIONAMENTO ===
+        function iniciarTimerRedirecionamento() {
+            if (isNovaAba) return; // Só funciona na aba original
+            
+            addDebugLog('⏰ Iniciando timer de 15s para redirecionamento');
+            
+            // Mostra seção de countdown
+            document.getElementById('countdownSection').style.display = 'block';
+            document.getElementById('btnCancelar').style.display = 'inline-block';
+            document.getElementById('btnSalvar').disabled = true;
+            
+            showStatus('⏰ <strong>Timer iniciado!</strong><br>🔄 Redirecionamento em 15 segundos...', 'warning');
+            
+            let segundosRestantes = 15;
+            
+            // Timer principal
+            redirectTimer = setTimeout(() => {
+                if (!redirectCanceled) {
+                    executarRedirecionamento();
+                }
+            }, 15000);
+            
+            // Countdown visual
+            countdownInterval = setInterval(() => {
+                if (redirectCanceled) {
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
+                segundosRestantes--;
+                
+                // Atualiza display
+                document.getElementById('countdownTimer').textContent = segundosRestantes;
+                
+                // Atualiza barra de progresso (15s = 100%, decresce)
+                const progressPercent = (segundosRestantes / 15) * 100;
+                document.getElementById('countdownProgress').style.width = progressPercent + '%';
+                
+                addDebugLog(`⏰ Timer: ${segundosRestantes}s restantes`);
+                
+                if (segundosRestantes <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+        }
+        
+        // === CANCELAR REDIRECIONAMENTO ===
+        function cancelarRedirect() {
+            redirectCanceled = true;
+            
+            if (redirectTimer) {
+                clearTimeout(redirectTimer);
+                redirectTimer = null;
+            }
+            
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            
+            // Esconde countdown
+            document.getElementById('countdownSection').style.display = 'none';
+            document.getElementById('btnCancelar').style.display = 'none';
+            document.getElementById('btnSalvar').disabled = false;
+            
+            showStatus('❌ <strong>Redirecionamento cancelado!</strong><br>✅ Continue usando normalmente', 'warning');
+            addDebugLog('❌ Redirecionamento cancelado pelo usuário');
+        }
+        
+        // === EXECUTAR REDIRECIONAMENTO ===
+        async function executarRedirecionamento() {
+            addDebugLog('🔄 Executando redirecionamento para about:blank');
+            
+            try {
+                // 1. Notifica Python sobre redirecionamento
+                await navigator.clipboard.writeText('REDIRECT_READY');
+                addDebugLog('✅ REDIRECT_READY enviado para Python');
+                
+                // 2. Feedback final
+                showStatus('🔄 <strong>Redirecionando...</strong><br>👋 Indo para about:blank', 'success');
+                
+                // 3. Aguarda um momento e redireciona
+                setTimeout(() => {
+                    addDebugLog('🔄 Executando window.location.href = "about:blank"');
+                    window.location.href = 'about:blank';
+                }, 1000);
+                
+            } catch (error) {
+                addDebugLog(`💥 Erro no redirecionamento: ${error.message}`);
+                showStatus(`❌ <strong>Erro no redirecionamento!</strong><br>${error.message}`, 'error');
+            }
+        }
+        
+        // === FINALIZAR ===
+        async function finalizar() {
+            const timestamp = new Date().toLocaleTimeString();
+            addDebugLog(`🏁 FINALIZAR chamado em: ${timestamp}`);
+            
+            try {
+                await navigator.clipboard.writeText('FINALIZAR_CLICADO');
+                addDebugLog('✅ FINALIZAR_CLICADO enviado');
+                
+                showStatus('🏁 <strong>FINALIZAR enviado!</strong><br>⏹️ Python encerrará monitoramento', 'error');
+                
+                // Desabilita botões
+                document.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                });
+                
+                // Cancela timer se ativo
+                if (redirectTimer) {
+                    cancelarRedirect();
+                }
+                
+            } catch (error) {
+                addDebugLog(`💥 Erro FINALIZAR: ${error.message}`);
+                showStatus(`❌ <strong>Erro!</strong><br>${error.message}`, 'error');
+            }
+        }
+        
+        // === UTILITÁRIOS ===
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.innerHTML = message;
+            
+            // Remove classes anteriores
+            status.className = 'status';
+            
+            // Adiciona nova classe
+            if (type === 'success') {
+                status.classList.add('success');
+            } else if (type === 'error') {
+                status.classList.add('error');
+            } else if (type === 'warning') {
+                status.style.background = 'rgba(255, 152, 0, 0.3)';
+                status.style.border = '1px solid rgba(255, 152, 0, 0.6)';
+            }
+        }
+        
+        function addDebugLog(message) {
+            if (!debugEnabled) return;
+            
+            const debugContent = document.getElementById('debugContent');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.style.marginBottom = '3px';
+            logEntry.innerHTML = `<span style="color: #888;">[${timestamp}]</span> ${message}`;
+            
+            debugContent.appendChild(logEntry);
+            
+            // Mantém últimas 15 mensagens
+            while (debugContent.children.length > 15) {
+                debugContent.removeChild(debugContent.firstChild);
+            }
+            
+            // Auto-scroll
+            debugContent.scrollTop = debugContent.scrollHeight;
+        }
+        
+        function toggleDebug() {
+            debugEnabled = !debugEnabled;
+            const debugLog = document.getElementById('debugLog');
+            
+            if (debugEnabled) {
+                debugLog.style.display = 'block';
+                addDebugLog('🔧 Debug ativado');
+            } else {
+                debugLog.style.display = 'none';
+            }
+        }
+        
+        // === INICIALIZAÇÃO ===
+        window.addEventListener('load', () => {
+            const timestamp = new Date().toLocaleTimeString();
+            
+            // Detecta tipo de aba
+            detectarTipoAba();
+            
+            // Log inicial
+            addDebugLog(`🚀 Página carregada: ${timestamp}`);
+            addDebugLog(`🌐 User Agent: ${navigator.userAgent.split(' ').slice(-2).join(' ')}`);
+            addDebugLog(`📋 Clipboard API: ${navigator.clipboard ? '✅' : '❌'}`);
+            addDebugLog(`🔒 Secure Context: ${window.isSecureContext ? '✅' : '❌'}`);
+            addDebugLog(`🎯 Tipo: ${isNovaAba ? 'Nova Aba' : 'Aba Original'}`);
+            
+            if (!isNovaAba) {
+                showStatus('🟢 <strong>Aba Original pronta!</strong><br>💾 Clique SALVAR para testar fluxo', 'success');
+            }
+        });
+        
+        // === EVENTOS ===
+        window.addEventListener('focus', () => {
+            addDebugLog('👁️ Aba ganhou foco');
+        });
+        
+        window.addEventListener('blur', () => {
+            addDebugLog('👁️ Aba perdeu foco');
+        });
+        
+        window.addEventListener('beforeunload', () => {
+            addDebugLog('👋 Aba sendo fechada/redirecionada');
+        });
+        
+        // === ATALHOS DE TECLADO ===
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey) {
+                if (event.key === 's') {
+                    event.preventDefault();
+                    if (!isNovaAba && !document.getElementById('btnSalvar').disabled) {
+                        salvar();
+                    }
+                } else if (event.key === 'c') {
+                    if (redirectTimer) {
+                        cancelarRedirect();
+                    }
+                } else if (event.key === 'f') {
+                    finalizar();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
